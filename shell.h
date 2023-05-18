@@ -13,15 +13,13 @@
 
 extern char **environ;
 
-/*main*/
-int main(void);
-
 /*helpers*/
 char *read_line(void);
 char **split_line(char *line);
 char **get_path(void);
-
+char **tokenize_input(char *input);
 /*execute*/
 int execute(char **args);
+int execute_command(char **args);
 
 #endif 
