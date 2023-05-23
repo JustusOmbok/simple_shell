@@ -30,10 +30,10 @@ int main(void)
 
 /**
  * execute - executes
- * i: i
- * j: j
- * *command: pointer
- * **path: pointer
+ * @i: i
+ * @j: j
+ * @*command: pointer
+ * @**path: pointer
  * Return: 1
  */
 
@@ -107,9 +107,11 @@ char *read_line(void)
 
 /**
  * **split_line - splits a line
- * **args: args
- * *token: token
- * i: i
+ * @**args: args
+ * @*token: token
+ * 
+ * @i: i
+ * @line: line
  * Return: args
  */
 
@@ -137,7 +139,7 @@ char **split_line(char *line)
 
 /**
  * get_path - gets path
- * pathEnv: path
+ * @pathEnv: path
  * Return: path
  */
 

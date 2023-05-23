@@ -20,6 +20,7 @@ char **get_path(void);
 char **tokenize_input(char *input);
 char *my_getline(void);
 char* read_input();
+char **split_input(char *input);
 /*execute*/
 int execute(char **args);
 int execute_command(char **args);
