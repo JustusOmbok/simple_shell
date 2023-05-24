@@ -8,7 +8,7 @@
  * @status: status
  * Return: 0
  */
-char* read_input();
+char *read_input(void);
 int main(void)
 {
 	char *input, **tokens;
@@ -43,7 +43,7 @@ int main(void)
 		free(tokens);
 	}
 
-	return 0;
+	return (0);
 }
 
 /**
@@ -84,35 +84,34 @@ char **split_input(char *input)
 	}
 	tokens[position] = NULL;
 
-	return tokens;
+	return (tokens);
 }
 
 /**
  * read_input - reads input
- * input: input
  * Return: input
  */
 
-char* read_input()
+char *read_input(void)
 {
-        char* input = malloc(MAX_INPUT_LENGTH * sizeof(char));
+	char *input = malloc(MAX_INPUT_LENGTH * sizeof(char));
 
-        if (input == NULL)
-        {
-                perror("Memory allocation error");
-                exit(EXIT_FAILURE);
-        }
+	if (input == NULL)
+	{
+		perror("Memory allocation error");
+		exit(EXIT_FAILURE);
+	}
 
-        printf("Enter a command: ");
-        fgets(input, MAX_INPUT_LENGTH, stdin);
+	printf("Enter a command: ");
+	fgets(input, MAX_INPUT_LENGTH, stdin);
 
-        return input;
+	return (input);
 }
 
 /**
  * execute - executes
  * @i: i
- * @j: j
+ * @args: args
  * @*command: pointer
  * @**path: pointer
  * Return: 1
@@ -120,28 +119,28 @@ char* read_input()
 
 int execute(char **args)
 {
-        int i;
-        char *command;
-        char **path;
-        struct stat st;
+	int i;
+	char *command;
+	char **path;
+	struct stat st;
 
-        if (args[0] == NULL)
-                return (1);
+	if (args[0] == NULL)
+		return (1);
 
-        if (strcmp(args[0], "exit") == 0)
-                return (0);
+	if (strcmp(args[0], "exit") == 0)
+		return (0);
 
-        path = get_path();
-        command = malloc(sizeof(char) * 1024);
+	path = get_path();
+	command = malloc(sizeof(char) * 1024);
 
-        for (i = 0; path[i] != NULL; i++)
-        {
-                strcpy(command, path[i]);
-                strcat(command, "/");
-                strcat(command, args[0]);
+	for (i = 0; path[i] != NULL; i++)
+	{
+		strcpy(command, path[i]);
+		strcat(command, "/");
+		strcat(command, args[0]);
 
-                if (stat(command, &st) == 0)
-                {
+		if (stat(command, &st) == 0)
+	{
                         if (fork() == 0)
                         {
                                 execve(command, args, environ);
@@ -164,7 +163,6 @@ int execute(char **args)
 
 /**
  * get_path - gets path
- * @pathEnv: path
  * Return: path
  */
 
@@ -202,5 +200,5 @@ char** get_path()
 
         path[i] = NULL;
 
-        return path;
+        return (path);
 }
