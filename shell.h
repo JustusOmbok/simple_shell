@@ -48,6 +48,68 @@ char **split_input(char *input);
 int execute(char **args);
 int execute_command(char **args);
 
+/**
+ * struct liststr - singly linked list
+ * @num: the number field
+ * @str: pointer to a string
+ * @next: points to the next node
+ */
+typedef struct liststr
+{
+	int num;
+	char *str;
+	struct liststr *next;
+} list_t;
+
+/**
+ *struct passinfo - holds pseudo-arguements to pass into a function,
+ *	to allow uniform prototype for function pointer struct
+ *@arg: a getline generated string containing arguements
+ *@argv: an array of strings generated from arg
+ *@path: a string path for the current command
+ *@argc: the number of argument
+ *@line_count: the error count
+ *@err_num: the error codes for exit()
+ *@linecount_flag: if on count this line of input
+ *@fname: the filename of program
+ *@env: local copy of environ for linked list
+ *@environ: custom modified copy of environ from LL env
+ *@history: the node for history
+ *@alias: the node for alias
+ *@env_changed: on if environ was changed
+ *@status: the return status of the last exec'd command
+ *@cmd_buf: address of pointer to cmd_buf, on if chaining
+ *@cmd_buf_type: CMD_type ||, &&, ;
+ *@readfd: the fd from which to read line input
+ *@histcount: the number count history line
+ */
+
+typedef struct passinfo
+{
+	char **argv;
+	char *arg;
+	char *path;
+	int argc;
+	unsigned int line_count;
+	int err_num;
+	int linecount_flag;
+	char *fname;
+	list_t *env;
+	list_t *history;
+	list_t *alias;
+	char **environ;
+	int env_changed;
+	int status;
+
+	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+	int cmd_buf_type; /* CMD_type ||, &&, ; */
+	int readfd;
+	int histcount;
+} info_t;
+
+#define INFO_INIT \
+{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
+	0, 0, 0}
 
 /*parser.c funcs */
 int is_cmd(info_t *, char *);
@@ -129,6 +191,5 @@ int find_builtin(info_t *);
 int hsh(info_t *, char **);
 void fork_cmd(info_t *);
 void find_cmd(info_t *);
-
 
 #endif 
