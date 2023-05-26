@@ -142,7 +142,6 @@ char **split_line(char *line)
  * @pathEnv: path
  * Return: path
  */
-
 char** get_path()
 {
 	char* pathEnv = getenv("PATH");

@@ -9,41 +9,37 @@
  * Return: 0
  */
 char *read_input(void);
-int main(void)
-{
-	char *input, **tokens;
-	int status = 0;
+int main(void) {
+    char *input, **tokens;
+    int status = 0;
 
-	while (1)
-	{
-		input = read_input();
-		tokens = split_input(input);
+    while (1) {
+        input = read_input();
+        tokens = split_input(input);
 
-		if (tokens[0] == NULL)
-		{
-			free(input);
-			free(tokens);
-			continue;
-		}
+        if (tokens[0] == NULL) {
+            free(input);
+            free(tokens);
+            continue;
+        }
 
-		if (strcmp(tokens[0], "exit") == 0)
-		{
-			if (tokens[1] != NULL)
-				status = atoi(tokens[1]);
+        if (strcmp(tokens[0], "exit") == 0) {
+            if (tokens[1] != NULL)
+                status = atoi(tokens[1]);
 
-			free(input);
-			free(tokens);
-			exit(status);
-		}
+            free(input);
+            free(tokens);
+            exit(status);
+        }
 
-		if (execute(tokens) == -1)
-			printf("%s: command not found\n", tokens[0]);
+        if (execute(tokens) == -1)
+            printf("%s: command not found\n", tokens[0]);
 
-		free(input);
-		free(tokens);
-	}
+        free(input);
+        free(tokens);
+    }
 
-	return (0);
+    return (0);
 }
 
 /**
@@ -51,40 +47,35 @@ int main(void)
  * @input: string to be split
  * Return: token array
  */
-char **split_input(char *input)
-{
-	int bufsize = TOKEN_BUFSIZE, position = 0;
-	char **tokens = malloc(bufsize * sizeof(char *));
-	char *token;
+char **split_input(char *input) {
+    int bufsize = TOKEN_BUFSIZE, position = 0;
+    char **tokens = malloc(bufsize * sizeof(char *));
+    char *token;
 
-	if (!tokens)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
+    if (!tokens) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
 
-	token = strtok(input, TOKEN_DELIMITERS);
-	while (token != NULL)
-	{
-		tokens[position] = token;
-		position++;
+    token = strtok(input, TOKEN_DELIMITERS);
+    while (token != NULL) {
+        tokens[position] = token;
+        position++;
 
-		if (position >= bufsize)
-		{
-			bufsize += TOKEN_BUFSIZE;
-			tokens = realloc(tokens, bufsize * sizeof(char *));
-			if (!tokens)
-			{
-				perror("realloc");
-				exit(EXIT_FAILURE);
-			}
-		}
+        if (position >= bufsize) {
+            bufsize += TOKEN_BUFSIZE;
+            tokens = realloc(tokens, bufsize * sizeof(char *));
+            if (!tokens) {
+                perror("realloc");
+                exit(EXIT_FAILURE);
+            }
+        }
 
-		token = strtok(NULL, TOKEN_DELIMITERS);
-	}
-	tokens[position] = NULL;
+        token = strtok(NULL, TOKEN_DELIMITERS);
+    }
+    tokens[position] = NULL;
 
-	return (tokens);
+    return (tokens);
 }
 
 /**
@@ -92,20 +83,18 @@ char **split_input(char *input)
  * Return: input
  */
 
-char *read_input(void)
-{
-	char *input = malloc(MAX_INPUT_LENGTH * sizeof(char));
+char *read_input(void) {
+    char *input = malloc(MAX_INPUT_LENGTH * sizeof(char));
 
-	if (input == NULL)
-	{
-		perror("Memory allocation error");
-		exit(EXIT_FAILURE);
-	}
+    if (input == NULL) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
 
-	printf("Enter a command: ");
-	fgets(input, MAX_INPUT_LENGTH, stdin);
+    printf("Enter a command: ");
+    fgets(input, MAX_INPUT_LENGTH, stdin);
 
-	return (input);
+    return (input);
 }
 
 /**
@@ -117,48 +106,42 @@ char *read_input(void)
  * Return: 1
  */
 
-int execute(char **args)
-{
-	int i;
-	char *command;
-	char **path;
-	struct stat st;
+int execute(char **args) {
+    int i;
+    char *command;
+    char **path;
+    struct stat st;
 
-	if (args[0] == NULL)
-		return (1);
-
-	if (strcmp(args[0], "exit") == 0)
-		return (0);
-
-	path = get_path();
-	command = malloc(sizeof(char) * 1024);
-
-	for (i = 0; path[i] != NULL; i++)
-	{
-		strcpy(command, path[i]);
-		strcat(command, "/");
-		strcat(command, args[0]);
-
-		if (stat(command, &st) == 0)
-	{
-                        if (fork() == 0)
-                        {
-                                execve(command, args, environ);
-                        }
-                        else
-                        {
-                                wait(NULL);
-                                free(command);
-                                free(path);
-                                return (1);
-                        }
-                }
-        }
-
-        printf("%s: command not found\n", args[0]);
-        free(command);
-        free(path);
+    if (args[0] == NULL)
         return (1);
+
+    if (strcmp(args[0], "exit") == 0)
+        return (0);
+
+    path = get_path();
+    command = malloc(sizeof(char) * 1024);
+
+    for (i = 0; path[i] != NULL; i++) {
+        strcpy(command, path[i]);
+        strcat(command, "/");
+        strcat(command, args[0]);
+
+        if (stat(command, &st) == 0) {
+            if (fork() == 0) {
+                execve(command, args, environ);
+            } else {
+                wait(NULL);
+                free(command);
+                free(path);
+                return (1);
+            }
+        }
+    }
+
+    printf("%s: command not found\n", args[0]);
+    free(command);
+    free(path);
+    return (1);
 }
 
 /**
@@ -166,39 +149,33 @@ int execute(char **args)
  * Return: path
  */
 
-char** get_path()
-{
-        char* pathEnv = getenv("PATH");
-        int numPaths = 1;
-        int i = 0;
-        char** path = malloc((numPaths + 1) * sizeof(char*));
-        char* token = strtok(pathEnv, ":");
+char **get_path() {
+    char *pathEnv = getenv("PATH");
+    int numPaths = 1;
+    int i = 0;
+    char **path = malloc((numPaths + 1) * sizeof(char *));
+    char *token = strtok(pathEnv, ":");
 
-        if (pathEnv == NULL)
-        {
-                fprintf(stderr, "Error: PATH environment variable not found.\n");
-                return NULL;
+    if (pathEnv == NULL) {
+        fprintf(stderr, "Error: PATH environment variable not found.\n");
+        return NULL;
+    }
+
+    for (i = 0; pathEnv[i] != '\0'; i++) {
+        if (pathEnv[i] == ':') {
+            numPaths++;
         }
+    }
 
-	    for (i = 0; pathEnv[i] != '\0'; i++)
-        {
-                if (pathEnv[i] == ':')
-                {
-                        numPaths++;
-                }
-        }
+    while (token != NULL) {
+        path[i] = malloc((strlen(token) + 1) * sizeof(char));
+        strcpy(path[i], token);
+        i++;
 
+        token = strtok(NULL, ":");
+    }
 
-        while (token != NULL)
-        {
-                path[i] = malloc((strlen(token) + 1) * sizeof(char));
-                strcpy(path[i], token);
-                i++;
+    path[i] = NULL;
 
-                token = strtok(NULL, ":");
-        }
-
-        path[i] = NULL;
-
-        return (path);
+    return (path);
 }
