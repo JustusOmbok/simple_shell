@@ -111,6 +111,17 @@ typedef struct passinfo
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
 	0, 0, 0}
 
+/**
+ *struct builtin - holds a builtin string and related function
+ *@type: the flag for builtin command
+ *@func: the function
+ */
+typedef struct builtin
+{
+	char *type;
+	int (*func)(info_t *);
+} builtin_table;
+
 /*parser.c funcs */
 int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
