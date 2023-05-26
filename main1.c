@@ -9,15 +9,19 @@ void _eputs(char *str);
 int populate_env_list(info_t *info);
 int build_history_list(info_t *info, char *buf, int linecount);
 int interactive(info_t *info);
+void free_info(info_t *info, int all);
 ssize_t get_input(info_t *info);
 char *_strchr(char *s, char c);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 ssize_t read_buf(info_t *info, char *buf, size_t *i);
 int _getline(info_t *info, char **ptr, size_t *length);
 int hsh(info_t *info, char **av);
+void set_info(info_t *info, char **av);
 ssize_t input_buf(info_t *info, char **buf, size_t *len);
 int _eputchar(char c);
 char *_strncpy(char *dest, char *src, int n);
 char *_strncat(char *dest, char *src, int n);
+void clear_info(info_t *info);
 int read_history(info_t *info);
 void remove_comments(char *buf);
 void sigintHandler(__attribute__((unused))int sig_num);
@@ -485,4 +489,106 @@ char *_strchr(char *s, char c)
 	} while (*s++ != '\0');
 
 	return (NULL);
+}
+
+/**
+ * _realloc - memory allocated
+ * @*ptr: pointer ptr
+ * @old_size: old size
+ * @new_size: new block size
+ * Return: pointer
+ */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+{
+	char *p;
+
+	if (!ptr)
+		return (malloc(new_size));
+	if (!new_size)
+		return (free(ptr), NULL);
+	if (new_size == old_size)
+		return (ptr);
+
+	p = malloc(new_size);
+	if (!p)
+		return (NULL);
+
+	old_size = old_size < new_size ? old_size : new_size;
+	while (old_size--)
+		p[old_size] = ((char *)ptr)[old_size];
+	free(ptr);
+	return (p);
+}
+
+/**
+ * clear_info - info cleared
+ * @info: info
+ */
+void clear_info(info_t *info)
+{
+	info->arg = NULL;
+	info->argv = NULL;
+	info->path = NULL;
+	info->argc = 0;
+}
+
+/**
+ * set_info - info is set
+ * @info: info
+ * @av: args vect
+ */
+void set_info(info_t *info, char **av)
+{
+	int i = 0;
+
+	info->fname = av[0];
+	if (info->arg)
+	{
+		info->argv = strtow(info->arg, " \t");
+		if (!info->argv)
+		{
+
+			info->argv = malloc(sizeof(char *) * 2);
+			if (info->argv)
+			{
+				info->argv[0] = _strdup(info->arg);
+				info->argv[1] = NULL;
+			}
+		}
+		for (i = 0; info->argv && info->argv[i]; i++)
+			;
+		info->argc = i;
+
+		replace_alias(info);
+		replace_vars(info);
+	}
+}
+
+/**
+ * free_info - info is cleared
+ * @info: info
+ * @all: all true
+ */
+void free_info(info_t *info, int all)
+{
+	ffree(info->argv);
+	info->argv = NULL;
+	info->path = NULL;
+	if (all)
+	{
+		if (!info->cmd_buf)
+			free(info->arg);
+		if (info->env)
+			free_list(&(info->env));
+		if (info->history)
+			free_list(&(info->history));
+		if (info->alias)
+			free_list(&(info->alias));
+		ffree(info->environ);
+			info->environ = NULL;
+		bfree((void **)info->cmd_buf);
+		if (info->readfd > 2)
+			close(info->readfd);
+		_putchar(BUF_FLUSH);
+	}
 }
