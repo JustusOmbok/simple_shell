@@ -1,5 +1,14 @@
-#This files lists all individuals that contributed content to this repository
-#For how it is generated see 'hack/generate-authors.sh'.
+#!/bin/bash
+set -e
 
-Akem Mensah <141195emmanuel@gmail.com>
-Justus Ombok <ombokjustus@gmail.com>
+cd "$(dirname "$(readlink -f "$BASH_SOURCE")")/.."
+
+
+{
+	cat <<-'EOH'
+	#This file lists all individuals having contributed content to the repository.
+	#For how it is generated, see 'hack/generate-authors.sh'.
+	EOH
+	echo
+	git log --format='%aN <%aE>' | sort -uf
+}
