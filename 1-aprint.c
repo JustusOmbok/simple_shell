@@ -7,3 +7,4 @@ int main() {
     printf("%s\n", "school");
     return 0;
 }
+
