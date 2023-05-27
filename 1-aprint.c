@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /**
- * main - It prints the word "school".
+ * main1 - It prints the word "school".
  * Return: 0 indicating successful execution.
  */
 int main1(void)
