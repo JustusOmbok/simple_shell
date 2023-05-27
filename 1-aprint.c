@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 /*
- *main - prints a word passed to it
+ * main - prints a word passed to it
  */
 int main(void)
 {
