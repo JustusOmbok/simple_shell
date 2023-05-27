@@ -21,7 +21,7 @@ int main(void)
 {
 char input[MAX_INPUT];
 
-while (1) 
+while (1)
 {
 printf(PROMPT);
 if (fgets(input, sizeof(input), stdin) == NULL)
@@ -43,14 +43,14 @@ return (0);
 *
 * Return: 0 on success
 */
-void execute_command(char *command) 
+void execute_command(char *command)
 {
 pid_t pid = fork();
 
 if (pid < 0)
 {
 /* Error in fork() */
- perror("Fork error");
+perror("Fork error");
 } else if (pid == 0)
 {
 /* Child process */
@@ -60,7 +60,8 @@ if (execvp(command, argv) == -1)
 perror("Error executing command");
 exit(1);
 }
-} else
+}
+else
 {
 int status;
 waitpid(pid, &status, 0);
