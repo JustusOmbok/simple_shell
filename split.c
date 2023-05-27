@@ -1,4 +1,3 @@
-split.c
 #include "shell.h"
 
 int token_len(char *str, char *delim);
