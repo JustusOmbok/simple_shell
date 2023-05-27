@@ -1,13 +1,9 @@
-#iclude <stdio.h>
 
-int print_word()
-{
-int i;
-char words[] = {"come to school tomorrow"};
-for (i = 0; i++;)
-{
-prrinf("%s\n", words[i]);
+#include <stdio.h>
+/*
+ *main - prints a word passed to it
+ */
+int main() {
+    printf("%s\n", "school");
+    return 0;
 }
-return (0);
-}
-
