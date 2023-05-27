@@ -3,9 +3,9 @@
 /*
  *main - prints a word passed to it
  */
-int main(void) 
+int main(void)
 {
-    printf("%s\n", "school");
-    return (0);
+printf("%s\n", "school");
+return (0);
 }
 
