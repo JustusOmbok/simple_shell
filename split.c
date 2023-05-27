@@ -42,7 +42,7 @@ int count_tokens(char *str, char *delim)
 	for (indx = 0; *(str + indx); indx++)
 		len++;
 
-	for (index = 0; indx < len; indx++)
+	for (indx = 0; indx < len; indx++)
 	{
 		if (*(str + indx) != *delim)
 		{
