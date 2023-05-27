@@ -51,7 +51,8 @@ if (pid < 0)
 {
 /* Error in fork() */
 perror("Fork error");
-} else if (pid == 0)
+}
+else if (pid == 0)
 {
 /* Child process */
 char *argv[] = {command, NULL};
